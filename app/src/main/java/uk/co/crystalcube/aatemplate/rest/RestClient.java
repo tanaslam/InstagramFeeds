@@ -2,6 +2,7 @@ package uk.co.crystalcube.aatemplate.rest;
 
 import org.androidannotations.annotations.AfterInject;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.rest.RestService;
 import org.springframework.web.client.RestClientException;
@@ -12,7 +13,7 @@ import java.net.Proxy;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 
-import uk.co.crystalcube.aatemplate.model.DummyObject;
+import uk.co.crystalcube.aatemplate.model.ModelObject;
 
 /**
  * Created by tanny on 04/02/15.
@@ -26,7 +27,10 @@ public class RestClient {
     private static final boolean SHOULD_USE_PROXY = false;
 
     @RestService
-    protected TemplateRestApi restService;
+    protected RestApi restService;
+
+    @Bean
+    protected ModelObject model;
 
     @AfterInject
     void setupRestClient() {
@@ -71,16 +75,14 @@ public class RestClient {
     }
 
     @Background
-    public DummyObject getRestObject(String id) {
+    public void getRestObject(String id) {
 
-        DummyObject object = null;
+        ModelObject response = null;
 
         try {
-            object = (DummyObject) restService.getObject(id);
+            response = (ModelObject) restService.getObject(id);
         } catch (RestClientException e) {
             // log error here
         }
-
-        return object;
     }
 }

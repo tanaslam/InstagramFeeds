@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
                 FormHttpMessageConverter.class},
 
         interceptors = {CustomRequestInterceptor.class})
-public interface TemplateRestApi extends RestClientErrorHandling {
+public interface RestApi extends RestClientErrorHandling {
 
     /**
      * Root URL of back-end REST API.
