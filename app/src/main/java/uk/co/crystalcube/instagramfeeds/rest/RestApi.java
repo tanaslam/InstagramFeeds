@@ -1,4 +1,4 @@
-package uk.co.crystalcube.aatemplate.rest;
+package uk.co.crystalcube.instagramfeeds.rest;
 
 import org.androidannotations.annotations.rest.Accept;
 import org.androidannotations.annotations.rest.Get;
@@ -9,16 +9,14 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import uk.co.crystalcube.instagramfeeds.model.media.popular.PopularMediaModel;
+
+
 /**
  * Created by tanny on 04/02/15.
  */
 @Accept(MediaType.APPLICATION_JSON)
-@Rest(
-        converters = {CustomGsonConverter.class,
-                StringHttpMessageConverter.class,
-                FormHttpMessageConverter.class},
-
-        interceptors = {CustomRequestInterceptor.class})
+@Rest(converters = {CustomGsonConverter.class})
 public interface RestApi extends RestClientErrorHandling {
 
     /**
@@ -47,12 +45,11 @@ public interface RestApi extends RestClientErrorHandling {
     void setRestTemplate(RestTemplate restTemplate);
 
     /**
-     * Get a dummy object from back-end, replace template params accordingly.
+     * Get a collection of popular media from instagram API
      *
-     * @param id unique identifier of the object
      * @return Model object parsed from JSON
      */
-    @Get("/object/{id}")
-    Object getObject(String id);
+    @Get("/v1/media/popular?access_token={token}")
+    PopularMediaModel getMediaPopular(String token);
 }
 

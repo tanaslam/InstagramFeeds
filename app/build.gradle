@@ -6,8 +6,8 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "uk.co.crystalcube.aatemplate"
-        minSdkVersion 17
+        applicationId "uk.co.crystalcube.instagramfeeds"
+        minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -34,7 +34,7 @@ android {
 apt {
     arguments {
         androidManifestFile variant.outputs[0].processResources.manifestFile
-        resourcePackageName 'uk.co.crystalcube.aatemplate'
+        resourcePackageName 'uk.co.crystalcube.instagramfeeds'
     }
 }
 
@@ -45,6 +45,7 @@ dependencies {
 
     // Support library
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
 
     // AA dependencies
     apt "org.androidannotations:androidannotations:3.2"
@@ -56,4 +57,10 @@ dependencies {
     // Spring REST template
     compile 'org.springframework.android:spring-android-core:1.0.1.RELEASE'
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
+
+    //OAuth library
+    compile 'org.scribe:scribe:1.3.7'
+
+    //Image caching library
+    compile 'com.github.erd:android-volley:1.0.0'
 }

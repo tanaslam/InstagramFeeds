@@ -1,4 +1,4 @@
-package uk.co.crystalcube.aatemplate.rest;
+package uk.co.crystalcube.instagramfeeds.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,7 +60,7 @@ public class CustomGsonConverter extends AbstractHttpMessageConverter<Object>
 
         try {
             return gson.fromJson(json, clazz);
-        } catch (JsonParseException pe) {
+        } catch (Exception pe) {
             throw new HttpMessageNotReadableException("Couldn't de-serialised http response", pe);
         } finally {
             json.close();

@@ -1,4 +1,4 @@
-package uk.co.crystalcube.aatemplate.rest;
+package uk.co.crystalcube.instagramfeeds.rest;
 
 import android.util.Log;
 
