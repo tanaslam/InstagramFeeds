@@ -94,7 +94,7 @@ public class RestClient implements RestErrorHandler {
         return model;
     }
 
-    public void fetchPopularMedia() {
+    public synchronized void fetchPopularMedia() {
 
         PopularMediaModel response;
 

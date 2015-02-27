@@ -1,17 +1,23 @@
 package uk.co.crystalcube.instagramfeeds.ui;
 
-import java.util.Locale;
-
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -19,12 +25,13 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
 import org.androidannotations.annotations.OptionsMenu;
 
+import java.util.Locale;
+
 import uk.co.crystalcube.instagramfeeds.InstagramApp;
 import uk.co.crystalcube.instagramfeeds.R;
 import uk.co.crystalcube.instagramfeeds.auth.AuthenticationManager;
 
 @EActivity(R.layout.activity_dashboard)
-@OptionsMenu(R.menu.menu_dashboard)
 public class DashboardActivity extends ActionBarActivity implements ActionBar.TabListener {
 
     public static final int REQUEST_CODE = 0x10;
@@ -48,7 +55,7 @@ public class DashboardActivity extends ActionBarActivity implements ActionBar.Ta
     @AfterViews
     protected void setupViewPager() {
 
-        if(((InstagramApp)getApplicationContext()).getAccessToken() == null) {
+        if (((InstagramApp) getApplicationContext()).getAccessToken() == null) {
             authorize();
         }
 
@@ -83,10 +90,41 @@ public class DashboardActivity extends ActionBarActivity implements ActionBar.Ta
     @OnActivityResult(REQUEST_CODE)
     protected void onAuthorization(int resultCode, Intent data) {
 
-        if(resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
             String token = data.getExtras().getString(WebViewActivity.KEY_EXTRA_ACCESS_TOKEN);
             ((InstagramApp) getApplicationContext()).setAccessToken(token);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.menu_dashboard, menu);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+
+            SearchManager manager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            MenuItem menuItem = menu.findItem(R.id.search);
+            SearchView search = (SearchView) MenuItemCompat.getActionView(menuItem);
+            search.setSearchableInfo(manager.getSearchableInfo(getComponentName()));
+
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    Toast.makeText(DashboardActivity.this, "Entered: " + s, Toast.LENGTH_LONG).show();
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String query) {
+                    //loadData(query);
+                    return true;
+                }
+            });
+        }
+
+        return true;
     }
 
     @Override

@@ -33,6 +33,9 @@ public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefr
         initContainer();
     }
 
+    /**
+     * @see android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener#onRefresh()
+     */
     @Override
     public void onRefresh() {
         container.setRefreshing(true);
@@ -45,7 +48,7 @@ public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefr
         }, 5000);
     }
 
-    protected void stopRefreshing() {
+    private void stopRefreshing() {
         container.setRefreshing(false);
     }
 

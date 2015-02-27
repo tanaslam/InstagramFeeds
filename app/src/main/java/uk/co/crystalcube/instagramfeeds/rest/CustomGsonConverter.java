@@ -61,7 +61,7 @@ public class CustomGsonConverter extends AbstractHttpMessageConverter<Object>
         try {
             return gson.fromJson(json, clazz);
         } catch (Exception pe) {
-            throw new HttpMessageNotReadableException("Couldn't de-serialised http response", pe);
+            throw new HttpMessageNotReadableException("Couldn't de-serialised http response: " + pe.getLocalizedMessage() , pe);
         } finally {
             json.close();
         }
@@ -76,7 +76,7 @@ public class CustomGsonConverter extends AbstractHttpMessageConverter<Object>
         try {
             gson.toJson(modelObject, writer);
         } catch (JsonIOException pe) {
-            throw new HttpMessageNotWritableException("Couldn't serialised object", pe);
+            throw new HttpMessageNotWritableException("Couldn't serialised object: " + pe.getLocalizedMessage(), pe);
         }
     }
 

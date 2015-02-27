@@ -1,9 +1,5 @@
 package uk.co.crystalcube.instagramfeeds.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,7 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -22,8 +21,6 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import uk.co.crystalcube.instagramfeeds.R;
-import uk.co.crystalcube.instagramfeeds.imagecache.BitmapLruCache;
-import uk.co.crystalcube.instagramfeeds.imagecache.ImageDownloader;
 import uk.co.crystalcube.instagramfeeds.model.media.popular.Datum;
 import uk.co.crystalcube.instagramfeeds.model.media.popular.PopularMediaModel;
 import uk.co.crystalcube.instagramfeeds.rest.RestClient;
@@ -32,20 +29,20 @@ import uk.co.crystalcube.instagramfeeds.rest.RestClient;
  * A fragment class that show media feed in @{link GridView}
  * Created by tanny on 25/02/2015.
  */
-@EFragment(R.layout.fragment_dashboard_grid)
+@EFragment(R.layout.fragment_dashboard)
 public class DashboardGridFragment extends SwipeRefreshFragment {
 
     @Bean
     protected RestClient restClient;
 
     @Bean
-    protected ImageDownloader imageDownloader;
-
-    @Bean
     protected PopularMediaModel model;
 
     @ViewById(R.id.container)
     protected SwipeRefreshLayout container;
+
+    @ViewById(R.id.progress_bar)
+    protected ProgressBar progressBar;
 
     @ViewById(R.id.recycler_view)
     protected RecyclerView recyclerView;
@@ -56,13 +53,6 @@ public class DashboardGridFragment extends SwipeRefreshFragment {
 
         setContainer(container);
         setupRecyclerView();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, 50);
 
         if(model.getData() == null || model.getData().size() == 0) {
             doRefresh();
@@ -91,6 +81,7 @@ public class DashboardGridFragment extends SwipeRefreshFragment {
             return;
         }
         recyclerView.setAdapter(new RecyclerAdapter(model.getData(), R.layout.grid_item));
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -122,8 +113,9 @@ public class DashboardGridFragment extends SwipeRefreshFragment {
             String caption = item.getCaption() == null ?
                     getActivity().getString(R.string.na) : item.getCaption().getText();
             holder.text.setText(caption);
-            imageDownloader.setImage(holder.thumbnail,
-                    item.getImages().getThumbnail().getUrl(), View.NO_ID, R.drawable.ic_launcher);
+            Picasso.with(getActivity())
+                    .load(item.getImages().getThumbnail().getUrl())
+                    .into(holder.thumbnail);
 
             holder.itemView.setTag(item);
         }

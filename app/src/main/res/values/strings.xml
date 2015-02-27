@@ -11,5 +11,7 @@
     <string name="title_activity_web_view">Authorization</string>
     <string name="desc_grid_item_media">Media</string>
     <string name="na">N/A</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search media</string>
 
 </resources>
