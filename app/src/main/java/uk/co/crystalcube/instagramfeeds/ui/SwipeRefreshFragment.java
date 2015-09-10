@@ -1,45 +1,33 @@
 package uk.co.crystalcube.instagramfeeds.ui;
 
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 
-import org.androidannotations.annotations.Background;
+import com.squareup.otto.Subscribe;
+
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 
+import uk.co.crystalcube.instagramfeeds.rest.events.FetchPopularMediaSuccess;
+
 /**
- * Abstract fragment class that implements pull to refresh abstraction
+ * Abstract fragment class that implements pull to refresh abstraction and keeps common subscribed events
  * Created by Tanveer Aslam on 24/02/2015.
  */
 @EFragment
-public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public abstract class SwipeRefreshFragment extends EventBusAwareFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private SwipeRefreshLayout container;
-
-    private void initContainer() {
-
-        assert container != null;
-
-        container.setOnRefreshListener(this);
-        container.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-    }
-
-    protected void setContainer(SwipeRefreshLayout layout) {
-        container = layout;
-        initContainer();
-    }
 
     /**
      * @see android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener#onRefresh()
      */
     @Override
     public void onRefresh() {
+
         container.setRefreshing(true);
-        doRefresh();
+
+        updateModel();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -48,20 +36,37 @@ public abstract class SwipeRefreshFragment extends Fragment implements SwipeRefr
         }, 5000);
     }
 
-    private void stopRefreshing() {
-        container.setRefreshing(false);
-    }
-
-    @Background
-    protected void doRefresh() {
-        updateModel();
-        updateUi();
+    @Subscribe
+    public void onFetchPopularMedia(FetchPopularMediaSuccess event) {
+        if (event.isSuccess()) {
+            updateUi();
+        }
     }
 
     @UiThread
     protected void updateUi() {
-        updateViews();
         stopRefreshing();
+        updateViews();
+    }
+
+    protected void setContainer(SwipeRefreshLayout layout) {
+        container = layout;
+        initContainer();
+    }
+
+    private void initContainer() {
+
+        assert container != null;
+
+        container.setOnRefreshListener(this);
+        container.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+    private void stopRefreshing() {
+        container.setRefreshing(false);
     }
 
     /**

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- Check values-v21\themes.xml for Lollipop and later APIs configurations -->
+        <!-- No changes in this file -->
+    </style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!-- Primary color -->
+        <item name="colorPrimary">@color/primary</item>
+
+        <!-- Accent color -->
+        <item name="colorAccent">@color/primary_light</item>
+
+        <!-- Dark variant for the primary color -->
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+
+        <!-- Toolbar text style -->
+        <item name="android:titleTextStyle">@style/ToolbarTitleTextStyle</item>
+        <item name="titleTextStyle">@style/ToolbarTitleTextStyle</item>
+
+        <!-- Toolbar action menu text color -->
+        <item name="android:actionMenuTextColor">@color/text_toolbar</item>
+
+        <item name="android:windowBackground">@color/window_background_default</item>
+    </style>
+
+
+    <style name="AppTheme.OnBoarding" parent="AppTheme">
+        <item name="android:windowBackground">@color/primary</item>
+        <item name="colorAccent">@android:color/white</item>
+    </style>
+
+</resources>

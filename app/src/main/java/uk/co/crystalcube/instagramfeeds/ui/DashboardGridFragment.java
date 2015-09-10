@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import org.androidannotations.annotations.AfterViews;
@@ -21,9 +22,10 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import uk.co.crystalcube.instagramfeeds.R;
-import uk.co.crystalcube.instagramfeeds.model.media.popular.Datum;
-import uk.co.crystalcube.instagramfeeds.model.media.popular.PopularMediaModel;
 import uk.co.crystalcube.instagramfeeds.rest.RestClient;
+import uk.co.crystalcube.instagramfeeds.rest.events.FetchPopularMediaSuccess;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.Datum;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.PopularMediaModel;
 
 /**
  * A fragment class that show media feed in @{link GridView}
@@ -47,32 +49,11 @@ public class DashboardGridFragment extends SwipeRefreshFragment {
     @ViewById(R.id.recycler_view)
     protected RecyclerView recyclerView;
 
-
     @AfterViews
     protected void setupViews() {
-
         setContainer(container);
         setupRecyclerView();
-
-        if(model.getData() == null || model.getData().size() == 0) {
-            doRefresh();
-        } else {
-            updateViews();
-        }
-    }
-
-    /**
-     * Refresh data model and fragment
-     */
-    public void refresh() {
-        super.doRefresh();
-    }
-
-    private void setupRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(),
-                getActivity().getResources().getInteger(R.integer.max_columns)));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        updateModel();
     }
 
     @Override
@@ -87,6 +68,14 @@ public class DashboardGridFragment extends SwipeRefreshFragment {
     @Override
     protected void updateModel() {
         restClient.fetchPopularMedia();
+    }
+
+
+    private void setupRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(),
+                getActivity().getResources().getInteger(R.integer.max_columns)));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {

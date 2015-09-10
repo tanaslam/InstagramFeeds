@@ -1,8 +1,5 @@
 package uk.co.crystalcube.instagramfeeds.auth;
 
-import android.net.Uri;
-import android.util.Log;
-
 import org.androidannotations.annotations.EBean;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.model.Token;
@@ -20,7 +17,7 @@ public class AuthenticationManager {
 
     public void init(String clientId, String clientSecret, String redirectUrl, String scope) {
         service = new ServiceBuilder()
-                .provider( InstagramApi.class )
+                .provider(InstagramApi.class)
                 .apiKey(clientId)
                 .apiSecret(clientSecret)
                 .scope(scope)
@@ -29,15 +26,13 @@ public class AuthenticationManager {
     }
 
     /**
-     *
      * @return Authorization url to present user with option.
      */
     public String getAuthorizationUrl() {
-       return service.getAuthorizationUrl(Token.empty());
+        return service.getAuthorizationUrl(Token.empty());
     }
 
     /**
-     *
      * @return Request code if client is authorized or null.
      */
     public String getRequestToken() {
@@ -51,11 +46,15 @@ public class AuthenticationManager {
         return null;
     }
 
+    /**
+     *
+     * @param verifier {@link Verifier}
+     */
     public void setVerifier(Verifier verifier) {
         this.verifier = verifier;
     }
+
     /**
-     *
      * @return Get API access token in exchange of request code.
      */
     public String getAccessToken() {

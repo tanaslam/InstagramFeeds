@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,7 +23,7 @@ import uk.co.crystalcube.instagramfeeds.R;
  * Created by Tanveer Aslam on 24/02/2015.
  */
 @EActivity(R.layout.activity_web)
-public class WebViewActivity extends ActionBarActivity {
+public class WebViewActivity extends AppCompatActivity {
 
     public static final java.lang.String KEY_EXTRA_ACCESS_TOKEN = "key-extra-access-token" ;
 

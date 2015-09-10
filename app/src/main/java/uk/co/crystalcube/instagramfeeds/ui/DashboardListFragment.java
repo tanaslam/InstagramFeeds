@@ -22,9 +22,11 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import uk.co.crystalcube.instagramfeeds.R;
-import uk.co.crystalcube.instagramfeeds.model.media.popular.Datum;
-import uk.co.crystalcube.instagramfeeds.model.media.popular.PopularMediaModel;
+import uk.co.crystalcube.instagramfeeds.eventbus.EventBusManager;
 import uk.co.crystalcube.instagramfeeds.rest.RestClient;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.Caption;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.Datum;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.PopularMediaModel;
 
 /**
  * A Fragment class that embeds root layout of application dashboard
@@ -32,6 +34,9 @@ import uk.co.crystalcube.instagramfeeds.rest.RestClient;
  */
 @EFragment(R.layout.fragment_dashboard)
 public class DashboardListFragment extends SwipeRefreshFragment {
+
+    @Bean
+    protected EventBusManager bus;
 
     @Bean
     protected RestClient restClient;
@@ -52,19 +57,12 @@ public class DashboardListFragment extends SwipeRefreshFragment {
     protected void setupViews() {
         setContainer(container);
         setupRecyclerView();
-        doRefresh();
+        updateModel();
     }
 
     @Override
     protected void updateModel() {
         restClient.fetchPopularMedia();
-    }
-
-
-    private void setupRecyclerView() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     @Override
@@ -74,6 +72,12 @@ public class DashboardListFragment extends SwipeRefreshFragment {
         }
         recyclerView.setAdapter(new RecyclerAdapter(model.getData(), R.layout.list_item));
         progressbar.setVisibility(View.GONE);
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -87,6 +91,12 @@ public class DashboardListFragment extends SwipeRefreshFragment {
         }
 
         @Override
+        public int getItemViewType(int position) {
+            //TODO override this method for different element layouts e.g. header/multi-column spanned elements
+            return super.getItemViewType(position);
+        }
+
+        @Override
         public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(resIdLayout, parent, false);
             return new ViewHolder(view);
@@ -97,14 +107,26 @@ public class DashboardListFragment extends SwipeRefreshFragment {
 
             Datum item = dataSet.get(position);
 
-            String caption = item.getCaption() == null ?
-                    getActivity().getString(R.string.na) : item.getCaption().getText();
-            holder.text.setText(caption);
+            setCaption(holder, item);
+            setImage(holder, item);
+
+            holder.itemView.setTag(item);
+        }
+
+        private void setImage(ViewHolder holder, Datum item) {
             Picasso.with(getActivity())
                     .load(item.getImages().getStandardResolution().getUrl())
                     .into(holder.thumbnail);
+        }
 
-            holder.itemView.setTag(item);
+        private void setCaption(ViewHolder holder, Datum item) {
+            Caption caption = item.getCaption();
+            if (caption == null) {
+                holder.text.setVisibility(View.GONE);
+            } else {
+                holder.text.setVisibility(View.VISIBLE);
+                holder.text.setText(item.getCaption().getText());
+            }
         }
 
         @Override

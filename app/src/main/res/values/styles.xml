@@ -1,8 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <!-- Base application widget styles -->
+    <style name="ToolbarTitleTextStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/text_toolbar</item>
     </style>
 
 </resources>

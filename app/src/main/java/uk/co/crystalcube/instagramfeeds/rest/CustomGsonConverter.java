@@ -10,6 +10,7 @@ import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.AbstractHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
@@ -61,7 +62,7 @@ public class CustomGsonConverter extends AbstractHttpMessageConverter<Object>
         try {
             return gson.fromJson(json, clazz);
         } catch (Exception pe) {
-            throw new HttpMessageNotReadableException("Couldn't de-serialised http response: " + pe.getLocalizedMessage() , pe);
+            throw new HttpMessageConversionException("Couldn't de-serialised http response: " + pe.getLocalizedMessage() , pe);
         } finally {
             json.close();
         }

@@ -1,5 +1,5 @@
 
-package uk.co.crystalcube.instagramfeeds.model.media.popular;
+package uk.co.crystalcube.instagramfeeds.rest.model.media.popular;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

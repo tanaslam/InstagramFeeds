@@ -1,9 +1,9 @@
 
-package uk.co.crystalcube.instagramfeeds.model.media.popular;
+package uk.co.crystalcube.instagramfeeds.rest.model.media.popular;
 
 import com.google.gson.annotations.Expose;
 
-public class LowResolution {
+public class Thumbnail {
 
     @Expose
     private String url;
@@ -30,7 +30,7 @@ public class LowResolution {
         this.url = url;
     }
 
-    public LowResolution withUrl(String url) {
+    public Thumbnail withUrl(String url) {
         this.url = url;
         return this;
     }
@@ -53,7 +53,7 @@ public class LowResolution {
         this.width = width;
     }
 
-    public LowResolution withWidth(Long width) {
+    public Thumbnail withWidth(Long width) {
         this.width = width;
         return this;
     }
@@ -76,7 +76,7 @@ public class LowResolution {
         this.height = height;
     }
 
-    public LowResolution withHeight(Long height) {
+    public Thumbnail withHeight(Long height) {
         this.height = height;
         return this;
     }

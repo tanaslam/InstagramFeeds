@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,10 +13,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -23,7 +23,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OnActivityResult;
-import org.androidannotations.annotations.OptionsMenu;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.Locale;
 
@@ -32,7 +32,7 @@ import uk.co.crystalcube.instagramfeeds.R;
 import uk.co.crystalcube.instagramfeeds.auth.AuthenticationManager;
 
 @EActivity(R.layout.activity_dashboard)
-public class DashboardActivity extends ActionBarActivity implements ActionBar.TabListener {
+public class DashboardActivity extends InstagramActivity implements ActionBar.TabListener {
 
     public static final int REQUEST_CODE = 0x10;
 
@@ -45,42 +45,47 @@ public class DashboardActivity extends ActionBarActivity implements ActionBar.Ta
     /**
      * Fragment pager adapter
      */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private SectionsPagerAdapter sectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
+    @ViewById(R.id.pager)
+    protected ViewPager viewPager;
+
+    @ViewById(R.id.tool_bar)
+    protected Toolbar toolBar;
+
+    @ViewById(R.id.tabs)
+    protected TabLayout tabs;
 
     @AfterViews
     protected void setupViewPager() {
+
+        setupToolbar();
 
         if (((InstagramApp) getApplicationContext()).getAccessToken() == null) {
             authorize();
         }
 
         final ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(sectionsPagerAdapter);
 
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                actionBar.setSelectedNavigationItem(position);
             }
         });
 
-        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(
-                    actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-                            .setIcon(mSectionsPagerAdapter.getIcon(i))
-                            .setTabListener(this));
-        }
+        tabs.setupWithViewPager(viewPager);
+    }
+
+    private void setupToolbar() {
+        setSupportActionBar(toolBar);
     }
 
     private void authorize() {
@@ -95,6 +100,7 @@ public class DashboardActivity extends ActionBarActivity implements ActionBar.Ta
             ((InstagramApp) getApplicationContext()).setAccessToken(token);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -146,7 +152,7 @@ public class DashboardActivity extends ActionBarActivity implements ActionBar.Ta
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
-        mViewPager.setCurrentItem(tab.getPosition());
+        viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override

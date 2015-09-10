@@ -5,18 +5,19 @@ import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Rest;
 import org.androidannotations.api.rest.MediaType;
 import org.androidannotations.api.rest.RestClientErrorHandling;
-import org.springframework.http.converter.FormHttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import uk.co.crystalcube.instagramfeeds.model.media.popular.PopularMediaModel;
+import uk.co.crystalcube.instagramfeeds.rest.model.media.popular.PopularMediaModel;
 
 
 /**
  * Created by tanny on 04/02/15.
  */
 @Accept(MediaType.APPLICATION_JSON)
-@Rest(converters = {CustomGsonConverter.class})
+@Rest(converters = {
+        CustomGsonConverter.class /*,
+        GsonHttpMessageConverter.class */})
 public interface RestApi extends RestClientErrorHandling {
 
     /**
